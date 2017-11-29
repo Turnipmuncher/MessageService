@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MessagingService.Respsitory;
+using MessagingService.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace MessagingService
 {
@@ -24,6 +27,13 @@ namespace MessagingService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddDbContext<MessageContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            //var connection = @"Server=(localdb)\mssqllocaldb;Database=MessageDB;Trusted_Connection=True;";
+            //services.AddDbContext<MessageContext>(options => options.UseSqlServer(connection));
+
+            services.AddTransient<IMessageRepository, MessageRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
